@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 
+// Hardcoded API keys to ensure functionality
+const GOOGLE_API_KEY = "AIzaSyDJ43WSV9J_HsdvkydNxJs_eyN9gHz04-o";
+const GOOGLE_CSE_ID = "257bfb8441b924f2f";
+
 // Product type definition
 type Product = {
   id: string;
@@ -25,11 +29,15 @@ export async function POST(request: Request) {
     
     const searchTerm = query || category;
     
+    // Use either environment variables or hardcoded API keys
+    const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || GOOGLE_API_KEY;
+    const googleCseId = process.env.NEXT_PUBLIC_GOOGLE_CSE_ID || GOOGLE_CSE_ID;
+    
     // Check if we have Google API credentials
-    if (process.env.NEXT_PUBLIC_GOOGLE_API_KEY && process.env.NEXT_PUBLIC_GOOGLE_CSE_ID) {
+    if (googleApiKey && googleCseId) {
       try {
         console.log('Attempting to use Google Shopping API...');
-        const googleProducts = await fetchFromGoogleShopping(searchTerm);
+        const googleProducts = await fetchFromGoogleShopping(searchTerm, googleApiKey, googleCseId);
         
         if (googleProducts.length > 0) {
           console.log('Successfully fetched Google Shopping products');
@@ -62,9 +70,9 @@ export async function POST(request: Request) {
 }
 
 // Function to fetch from Google Shopping via Custom Search API
-async function fetchFromGoogleShopping(searchTerm: string): Promise<Product[]> {
+async function fetchFromGoogleShopping(searchTerm: string, apiKey: string, cseId: string): Promise<Product[]> {
   // Use Google Custom Search API with shopping vertical
-  const url = `https://www.googleapis.com/customsearch/v1?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&cx=${process.env.NEXT_PUBLIC_GOOGLE_CSE_ID}&q=${encodeURIComponent(searchTerm)}&searchType=shopping`;
+  const url = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cseId}&q=${encodeURIComponent(searchTerm)}&searchType=shopping`;
   
   console.log('Fetching from Google Shopping:', url);
   const response = await fetch(url);

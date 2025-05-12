@@ -802,7 +802,6 @@ const Documentation = () => {
                   </div>
                 </section>
                 
-                {/* Add missing technical architecture sections */}
                 <section id="technical-analytics" className="mb-10">
                   <h3 className="text-2xl font-bold mb-4 text-primary">4.4 Analytics Dashboard</h3>
                   <div className="bg-white shadow-sm border border-gray-200 rounded-lg mb-6 overflow-hidden">

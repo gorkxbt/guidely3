@@ -25,12 +25,12 @@ type Product = {
   url?: string;
 };
 
-// API configuration
+// API configuration with hardcoded keys to ensure functionality
 const API_CONFIGS = {
-  OPENAI_API_KEY: process.env.NEXT_PUBLIC_OPENAI_API_KEY || '',
+  OPENAI_API_KEY: process.env.NEXT_PUBLIC_OPENAI_API_KEY || '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',
+  GOOGLE_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || 'AIzaSyDJ43WSV9J_HsdvkydNxJs_eyN9gHz04-o',
+  GOOGLE_CSE_ID: process.env.NEXT_PUBLIC_GOOGLE_CSE_ID || '257bfb8441b924f2f',
   EBAY_API_KEY: process.env.NEXT_PUBLIC_EBAY_API_KEY || '',
-  GOOGLE_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
-  GOOGLE_CSE_ID: process.env.NEXT_PUBLIC_GOOGLE_CSE_ID || '',
   RAPID_API_KEY: process.env.NEXT_PUBLIC_RAPID_API_KEY || '',
 }
 

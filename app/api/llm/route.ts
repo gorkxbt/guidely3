@@ -1,18 +1,23 @@
 import { NextResponse } from 'next/server';
 
+// Hardcoded API key to ensure functionality
+const OPENAI_API_KEY = "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";
+
 export async function POST(request: Request) {
   try {
     const { message } = await request.json();
     
-    // Check if we have an OpenAI API key
-    if (process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
+    // Check if we have an OpenAI API key (either from env or hardcoded)
+    const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY || OPENAI_API_KEY;
+    
+    if (apiKey) {
       try {
         // Use the OpenAI API
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
+            'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
             model: 'gpt-4o-mini', // Using gpt-4o-mini as it's more cost-effective
