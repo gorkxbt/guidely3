@@ -9,35 +9,46 @@ export async function POST(request: Request) {
     
     // Check if we have an OpenAI API key (either from env or hardcoded)
     const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY || OPENAI_API_KEY;
+    console.log('Using OpenAI API key starting with:', apiKey.substring(0, 10) + '...');
     
     if (apiKey) {
       try {
+        console.log('Sending request to OpenAI API...');
         // Use the OpenAI API
+        const requestBody = {
+          model: 'gpt-4o-mini', // Using gpt-4o-mini as it's more cost-effective
+          messages: [
+            { 
+              role: 'system', 
+              content: 'You are Guidely, an AI shopping assistant that helps users find products. Keep your responses concise and helpful, focusing on understanding the user\'s shopping needs.'
+            },
+            { role: 'user', content: message }
+          ],
+          temperature: 0.7,
+          max_tokens: 150 // Keep responses reasonably sized
+        };
+        
+        console.log('Request payload:', JSON.stringify(requestBody, null, 2));
+        
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
           },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini', // Using gpt-4o-mini as it's more cost-effective
-            messages: [
-              { 
-                role: 'system', 
-                content: 'You are Guidely, an AI shopping assistant that helps users find products. Keep your responses concise and helpful, focusing on understanding the user\'s shopping needs.'
-              },
-              { role: 'user', content: message }
-            ],
-            temperature: 0.7,
-            max_tokens: 150 // Keep responses reasonably sized
-          })
+          body: JSON.stringify(requestBody)
         });
         
+        console.log('OpenAI API response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error(`OpenAI API error: ${response.status}`);
+          const errorData = await response.json().catch(() => ({}));
+          console.error('OpenAI API error details:', errorData);
+          throw new Error(`OpenAI API error: ${response.status} - ${JSON.stringify(errorData)}`);
         }
         
         const data = await response.json();
+        console.log('OpenAI API response:', data);
         return NextResponse.json({ text: data.choices[0].message.content });
       } catch (apiError) {
         console.error('OpenAI API error:', apiError);
@@ -45,13 +56,14 @@ export async function POST(request: Request) {
         return simulateResponse(message);
       }
     } else {
+      console.log('No API key found, using simulated responses');
       // No API key, use simulated responses
       return simulateResponse(message);
     }
   } catch (error) {
     console.error('Error processing LLM request:', error);
     return NextResponse.json(
-      { error: 'Failed to process request' },
+      { error: 'Failed to process request', details: error instanceof Error ? error.toString() : 'Unknown error' },
       { status: 500 }
     );
   }

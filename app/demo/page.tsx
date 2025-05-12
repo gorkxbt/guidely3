@@ -575,12 +575,22 @@ const DemoPage = () => {
                             whileHover={{ scale: 1.03 }}
                             className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
                           >
-                            <div className="h-36 mb-3 rounded-lg overflow-hidden">
-                              <img 
-                                src={product.image} 
-                                alt={product.name} 
-                                className="w-full h-full object-cover"
-                              />
+                            <div className="h-36 mb-3 rounded-lg overflow-hidden bg-gray-100">
+                              {product.image ? (
+                                <img 
+                                  src={product.image} 
+                                  alt={product.name} 
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    // If image fails to load, replace with placeholder
+                                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150';
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                                  <span>No image</span>
+                                </div>
+                              )}
                             </div>
                             <h4 className="font-medium text-sm mb-1">{product.name}</h4>
                             <p className="text-primary font-bold mt-1">{product.price}</p>

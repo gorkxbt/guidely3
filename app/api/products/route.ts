@@ -82,6 +82,7 @@ async function fetchFromGoogleShopping(searchTerm: string, apiKey: string, cseId
   }
   
   const data = await response.json();
+  console.log('Google API response:', JSON.stringify(data, null, 2));
   
   if (!data.items || data.items.length === 0) {
     return [];
@@ -92,11 +93,19 @@ async function fetchFromGoogleShopping(searchTerm: string, apiKey: string, cseId
     const priceMatch = item.snippet?.match(/\$[\d,]+\.?\d*/);
     const price = priceMatch ? priceMatch[0] : 'Check price';
     
+    // Get image from pagemap or use fallback
+    let imageUrl = 'https://via.placeholder.com/150';
+    if (item.pagemap?.cse_image?.[0]?.src) {
+      imageUrl = item.pagemap.cse_image[0].src;
+    } else if (item.pagemap?.cse_thumbnail?.[0]?.src) {
+      imageUrl = item.pagemap.cse_thumbnail[0].src;
+    }
+    
     return {
       id: item.cacheId || `google-${Math.random().toString(36).substring(2, 9)}`,
       name: item.title,
       price: price,
-      image: item.pagemap?.cse_image?.[0]?.src || 'https://via.placeholder.com/150',
+      image: imageUrl,
       description: item.snippet || '',
       rating: 4.5, // Google doesn't usually provide ratings
       source: 'Google Shopping',
