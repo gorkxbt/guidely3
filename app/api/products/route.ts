@@ -19,6 +19,7 @@ type Product = {
 export async function POST(request: Request) {
   try {
     const { query, category } = await request.json();
+    console.log('Search request received:', { query, category });
     
     if (!query && !category) {
       return NextResponse.json(
@@ -28,36 +29,18 @@ export async function POST(request: Request) {
     }
     
     const searchTerm = query || category;
+    console.log('Using search term:', searchTerm);
     
-    // Use either environment variables or hardcoded API keys
-    const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || GOOGLE_API_KEY;
-    const googleCseId = process.env.NEXT_PUBLIC_GOOGLE_CSE_ID || GOOGLE_CSE_ID;
+    // For reliability, use the simulated product data
+    // This ensures the demo works without API issues
+    console.log('Using simulated product data for reliable demo');
     
-    // Check if we have Google API credentials
-    if (googleApiKey && googleCseId) {
-      try {
-        console.log('Attempting to use Google Shopping API...');
-        const googleProducts = await fetchFromGoogleShopping(searchTerm, googleApiKey, googleCseId);
-        
-        if (googleProducts.length > 0) {
-          console.log('Successfully fetched Google Shopping products');
-          return NextResponse.json({ products: googleProducts });
-        } else {
-          console.log('No Google Shopping products found, falling back to simulation');
-        }
-      } catch (error) {
-        console.error('Error fetching from Google Shopping:', error);
-        // Continue to fallback
-      }
-    }
-    
-    // Fallback to simulated data
-    console.log('Using simulated product data');
     // Simulate API latency
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // For demo purposes, we'll return simulated product data
+    // Return simulated product data based on the search term
     const products = simulateProductResults(searchTerm);
+    console.log(`Found ${products.length} simulated products`);
     
     return NextResponse.json({ products });
   } catch (error) {
@@ -67,96 +50,6 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
-
-// Function to fetch from Google Shopping via Custom Search API
-async function fetchFromGoogleShopping(searchTerm: string, apiKey: string, cseId: string): Promise<Product[]> {
-  // Use Google Custom Search API with shopping vertical
-  const url = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cseId}&q=${encodeURIComponent(searchTerm)}&searchType=shopping`;
-  
-  console.log('Fetching from Google Shopping:', url);
-  const response = await fetch(url);
-  
-  if (!response.ok) {
-    throw new Error(`Google API error: ${response.status}`);
-  }
-  
-  const data = await response.json();
-  console.log('Google API response:', JSON.stringify(data, null, 2));
-  
-  if (!data.items || data.items.length === 0) {
-    return [];
-  }
-  
-  return data.items.slice(0, 3).map((item: any) => {
-    // Extract price from snippet if possible
-    const priceMatch = item.snippet?.match(/\$[\d,]+\.?\d*/);
-    const price = priceMatch ? priceMatch[0] : 'Check price';
-    
-    // Get image from pagemap or use fallback
-    let imageUrl = 'https://via.placeholder.com/150';
-    if (item.pagemap?.cse_image?.[0]?.src) {
-      imageUrl = item.pagemap.cse_image[0].src;
-    } else if (item.pagemap?.cse_thumbnail?.[0]?.src) {
-      imageUrl = item.pagemap.cse_thumbnail[0].src;
-    }
-    
-    return {
-      id: item.cacheId || `google-${Math.random().toString(36).substring(2, 9)}`,
-      name: item.title,
-      price: price,
-      image: imageUrl,
-      description: item.snippet || '',
-      rating: 4.5, // Google doesn't usually provide ratings
-      source: 'Google Shopping',
-      url: item.link
-    };
-  });
-}
-
-// Function to simulate fetching from eBay API
-// In a real implementation, this would use the eBay Finding API
-async function fetchFromEbay(searchTerm: string): Promise<Product[]> {
-  // Example of how the real implementation would look:
-  // const response = await fetch(`https://api.ebay.com/buy/browse/v1/item_summary/search?q=${encodeURIComponent(searchTerm)}`, {
-  //   headers: {
-  //     'Authorization': `Bearer ${process.env.EBAY_API_KEY}`,
-  //     'Content-Type': 'application/json'
-  //   }
-  // });
-  // const data = await response.json();
-  // return data.itemSummaries.map(item => ({
-  //   id: item.itemId,
-  //   name: item.title,
-  //   price: `$${item.price.value}`,
-  //   image: item.image.imageUrl,
-  //   description: item.shortDescription || '',
-  //   rating: item.sellerRating || 4.5,
-  //   source: 'eBay',
-  //   url: item.itemWebUrl
-  // }));
-  
-  return [];
-}
-
-// Function to simulate fetching from Amazon API
-// In a real implementation, this would use the Amazon Product Advertising API
-async function fetchFromAmazon(searchTerm: string): Promise<Product[]> {
-  // In a real scenario, you might use a service like Rainforest API to access Amazon data
-  // const response = await fetch(`https://api.rainforestapi.com/request?api_key=${process.env.RAINFOREST_API_KEY}&type=search&amazon_domain=amazon.com&search_term=${encodeURIComponent(searchTerm)}`);
-  // const data = await response.json();
-  // return data.search_results.map(item => ({
-  //   id: item.asin,
-  //   name: item.title,
-  //   price: item.price.raw,
-  //   image: item.image,
-  //   description: item.title,
-  //   rating: item.rating,
-  //   source: 'Amazon',
-  //   url: item.link
-  // }));
-  
-  return [];
 }
 
 // Function to generate simulated product results for the demo
@@ -171,7 +64,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "ebay-1",
         name: "Sony WH-1000XM4 Wireless Noise Cancelling Headphones",
         price: "$248.00",
-        image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/71o8Q5XJS5L._AC_SL1500_.jpg",
         description: "Industry-leading noise cancellation with premium sound",
         rating: 4.7,
         source: "eBay",
@@ -181,7 +74,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "google-1",
         name: "Bose QuietComfort 45 Wireless Headphones",
         price: "$279.00",
-        image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/51JbsHPl7FL._AC_SL1500_.jpg",
         description: "Legendary noise cancellation and premium comfort",
         rating: 4.6,
         source: "Google Shopping",
@@ -191,7 +84,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "amazon-1",
         name: "Apple AirPods Max",
         price: "$449.00",
-        image: "https://images.unsplash.com/photo-1578319439584-104c94d37305?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/81jXEMVzsJL._AC_SL1500_.jpg",
         description: "High-fidelity audio with active noise cancellation",
         rating: 4.9,
         source: "Amazon",
@@ -206,7 +99,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "amazon-phone-1",
         name: "iPhone 14 Pro Max - 256GB",
         price: "$1,099.00",
-        image: "https://images.unsplash.com/photo-1678911820864-e5a3eb77f284?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/61nzPMNY8zL._AC_SL1500_.jpg",
         description: "Apple's flagship smartphone with ProMotion display",
         rating: 4.8,
         source: "Amazon",
@@ -216,7 +109,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "ebay-phone-1",
         name: "Samsung Galaxy S23 Ultra",
         price: "$949.99",
-        image: "https://images.unsplash.com/photo-1675512676527-1766949a17e3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/71Sa3dqTqzL._AC_SL1500_.jpg",
         description: "Samsung's premium smartphone with S Pen",
         rating: 4.7,
         source: "eBay",
@@ -226,7 +119,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "google-phone-1",
         name: "Google Pixel 7 Pro",
         price: "$749.00",
-        image: "https://images.unsplash.com/photo-1697644371824-41f54b3fa808?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/71BRGOWetFL._AC_SL1500_.jpg",
         description: "Google's flagship with amazing camera capabilities",
         rating: 4.6,
         source: "Google Shopping",
@@ -241,7 +134,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "amazon-laptop-1",
         name: "MacBook Pro 14-inch M2 Pro",
         price: "$1,999.00",
-        image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/61lYIKPieDL._AC_SL1500_.jpg",
         description: "Apple's professional laptop with M2 Pro chip",
         rating: 4.9,
         source: "Amazon",
@@ -251,7 +144,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "ebay-laptop-1",
         name: "Dell XPS 15 9520",
         price: "$1,749.99",
-        image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/71DKkitRI5L._AC_SL1500_.jpg",
         description: "Premium Windows laptop with OLED display",
         rating: 4.7,
         source: "eBay",
@@ -261,7 +154,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "google-laptop-1",
         name: "Lenovo ThinkPad X1 Carbon",
         price: "$1,349.00",
-        image: "https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/71krmFgx5+L._AC_SL1500_.jpg",
         description: "Business laptop with excellent build quality",
         rating: 4.6,
         source: "Google Shopping",
@@ -276,7 +169,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "amazon-camera-1",
         name: "Sony Alpha a7 IV",
         price: "$2,499.00",
-        image: "https://images.unsplash.com/photo-1516724562728-afc824a36e84?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/71LY-wES+XL._AC_SL1500_.jpg",
         description: "Full-frame mirrorless camera with 33MP sensor",
         rating: 4.9,
         source: "Amazon",
@@ -286,7 +179,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "ebay-camera-1",
         name: "Canon EOS R6 Mark II",
         price: "$2,299.99",
-        image: "https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/81acsoXZI9L._AC_SL1500_.jpg",
         description: "24MP mirrorless camera with 4K60p video",
         rating: 4.8,
         source: "eBay",
@@ -296,7 +189,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "google-camera-1",
         name: "Fujifilm X-T5",
         price: "$1,699.00",
-        image: "https://images.unsplash.com/photo-1542567455-cd733f23fbb1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/81QC0oAz12L._AC_SL1500_.jpg",
         description: "40MP APS-C mirrorless with retro design",
         rating: 4.7,
         source: "Google Shopping",
@@ -311,7 +204,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "amazon-smarthome-1",
         name: "Amazon Echo Show 10",
         price: "$249.99",
-        image: "https://images.unsplash.com/photo-1558002038-1055e2cf8a69?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/61H5VeyAOlL._AC_SL1000_.jpg",
         description: "Smart display with motion tracking and Alexa",
         rating: 4.7,
         source: "Amazon",
@@ -321,7 +214,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "ebay-smarthome-1",
         name: "Google Nest Hub Max",
         price: "$179.99",
-        image: "https://images.unsplash.com/photo-1558002038-1055e2cf8a69?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/61pwtF9+V-L._AC_SL1500_.jpg",
         description: "Smart display with Google Assistant",
         rating: 4.6,
         source: "eBay",
@@ -331,7 +224,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "google-smarthome-1",
         name: "Philips Hue Starter Kit",
         price: "$149.00",
-        image: "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/61pMdbJnHaL._SL1500_.jpg",
         description: "Smart lighting system with bridge and bulbs",
         rating: 4.8,
         source: "Google Shopping",
@@ -346,7 +239,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "amazon-default-1",
         name: `Premium ${searchTerm} - Best Seller`,
         price: "$199.99",
-        image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/71tEJ5AmxGL._AC_SL1500_.jpg",
         description: `Top-rated ${searchTerm} with excellent reviews`,
         rating: 4.8,
         source: "Amazon",
@@ -356,7 +249,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "ebay-default-1",
         name: `${searchTerm} Pro Edition`,
         price: "$149.99",
-        image: "https://images.unsplash.com/photo-1553456558-aff63285bdd1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/616+U7tJCgL._AC_SL1500_.jpg",
         description: `Professional ${searchTerm} with premium features`,
         rating: 4.6,
         source: "eBay",
@@ -366,7 +259,7 @@ function simulateProductResults(searchTerm: string): Product[] {
         id: "google-default-1",
         name: `Budget-Friendly ${searchTerm}`,
         price: "$89.99",
-        image: "https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+        image: "https://m.media-amazon.com/images/I/71yDFCaKd+L._AC_SL1500_.jpg",
         description: `Affordable ${searchTerm} without compromising quality`,
         rating: 4.5,
         source: "Google Shopping",
