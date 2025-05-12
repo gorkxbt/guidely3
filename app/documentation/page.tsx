@@ -660,7 +660,7 @@ const Documentation = () => {
                 </div>
                 
                 <section id="market-analysis-target-market" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.1 Target Market</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.1 Target Market</h3>
                   <p className="mb-4">Primary segments:</p>
                   <div className="grid md:grid-cols-2 gap-4 mb-6">
                     <div className="bg-gray-50 p-4 rounded-lg flex items-center">
@@ -683,7 +683,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="market-analysis-market-size" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.2 Market Size</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.2 Market Size</h3>
                   <div className="flex flex-col md:flex-row gap-4 mb-6">
                     <div className="flex-1 bg-gradient-to-r from-indigo-500 to-primary text-white p-6 rounded-lg text-center">
                       <div className="text-3xl font-bold mb-2">$50B</div>
@@ -701,7 +701,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="market-analysis-competitive-landscape" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.3 Competitive Landscape</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.3 Competitive Landscape</h3>
                   <div className="grid md:grid-cols-2 gap-8 mb-10">
                     <div>
                       <h4 className="font-semibold mb-3 text-lg">Current Solutions</h4>
@@ -850,7 +850,7 @@ const Documentation = () => {
                 </div>
                 
                 <section id="problem-shopper" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.1 Shopper Challenges</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.1 Shopper Challenges</h3>
                   <ul className="list-disc pl-6 space-y-2 text-gray-700">
                     <li><strong>Information Overload:</strong> Too many choices lead to decision paralysis.</li>
                     <li><strong>Lack of Personalization:</strong> Generic recommendations fail to meet individual needs.</li>
@@ -860,7 +860,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="problem-retailer" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.2 Retailer Challenges</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.2 Retailer Challenges</h3>
                   <ul className="list-disc pl-6 space-y-2 text-gray-700">
                     <li><strong>Low Conversion Rates:</strong> Inability to convert browsers into buyers.</li>
                     <li><strong>Poor Product Visibility:</strong> Difficulty surfacing relevant products to the right customers.</li>
@@ -870,7 +870,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="problem-solution" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.3 The Guidely Solution</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.3 The Guidely Solution</h3>
                   <div className="bg-indigo-50 p-6 rounded-lg">
                     <p className="mb-3">Guidely addresses these challenges by:</p>
                     <ul className="list-disc pl-6 space-y-2 text-gray-700">
