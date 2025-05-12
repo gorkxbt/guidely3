@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { FiStar } from 'react-icons/fi';
 

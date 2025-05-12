@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { FiMessageSquare, FiRefreshCw, FiDatabase, FiBarChart2 } from 'react-icons/fi';
 
