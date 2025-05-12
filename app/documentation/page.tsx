@@ -595,7 +595,7 @@ const Documentation = () => {
               <section id="introduction" className="mb-16">
                 <div className="flex items-center mb-6">
                   <FiBookOpen className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">Introduction</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">1. Introduction</h2>
                 </div>
                 
                 <section id="introduction-vision" className="mb-10">
@@ -652,15 +652,56 @@ const Documentation = () => {
                 </section>
               </section>
               
+              {/* Problem Statement Section */}
+              <section id="problem" className="mb-16">
+                <div className="flex items-center mb-6">
+                  <FiTarget className="text-primary w-8 h-8 mr-3" />
+                  <h2 className="text-3xl font-bold text-gray-900">2. Problem Statement</h2>
+                </div>
+                
+                <section id="problem-shopper" className="mb-10">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.1 Shopper Challenges</h3>
+                  <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                    <li><strong>Information Overload:</strong> Too many choices lead to decision paralysis.</li>
+                    <li><strong>Lack of Personalization:</strong> Generic recommendations fail to meet individual needs.</li>
+                    <li><strong>Inefficient Discovery:</strong> Traditional search methods are time-consuming and often ineffective.</li>
+                    <li><strong>Abandoned Carts:</strong> Frustration and indecision result in lost sales.</li>
+                  </ul>
+                </section>
+                
+                <section id="problem-retailer" className="mb-10">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.2 Retailer Challenges</h3>
+                  <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                    <li><strong>Low Conversion Rates:</strong> Inability to convert browsers into buyers.</li>
+                    <li><strong>Poor Product Visibility:</strong> Difficulty surfacing relevant products to the right customers.</li>
+                    <li><strong>Limited Customer Insights:</strong> Lack of understanding of shopper behavior and preferences.</li>
+                    <li><strong>High Customer Acquisition Costs:</strong> Inefficient marketing spend due to poor targeting.</li>
+                  </ul>
+                </section>
+                
+                <section id="problem-solution" className="mb-10">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.3 The Guidely Solution</h3>
+                  <div className="bg-indigo-50 p-6 rounded-lg">
+                    <p className="mb-3">Guidely addresses these challenges by:</p>
+                    <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                      <li>Reducing information overload through guided discovery.</li>
+                      <li>Delivering hyper-personalized recommendations in real-time.</li>
+                      <li>Creating an engaging, conversational shopping experience.</li>
+                      <li>Providing retailers with actionable insights and seamless integration.</li>
+                    </ul>
+                  </div>
+                </section>
+              </section>
+              
               {/* Market Analysis Section */}
               <section id="market-analysis" className="mb-16">
                 <div className="flex items-center mb-6">
                   <FiTarget className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">Market Analysis</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">3. Market Analysis</h2>
                 </div>
                 
                 <section id="market-analysis-target-market" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.1 Target Market</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.1 Target Market</h3>
                   <p className="mb-4">Primary segments:</p>
                   <div className="grid md:grid-cols-2 gap-4 mb-6">
                     <div className="bg-gray-50 p-4 rounded-lg flex items-center">
@@ -683,7 +724,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="market-analysis-market-size" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.2 Market Size</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.2 Market Size</h3>
                   <div className="flex flex-col md:flex-row gap-4 mb-6">
                     <div className="flex-1 bg-gradient-to-r from-indigo-500 to-primary text-white p-6 rounded-lg text-center">
                       <div className="text-3xl font-bold mb-2">$50B</div>
@@ -701,7 +742,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="market-analysis-competitive-landscape" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.3 Competitive Landscape</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.3 Competitive Landscape</h3>
                   <div className="grid md:grid-cols-2 gap-8 mb-10">
                     <div>
                       <h4 className="font-semibold mb-3 text-lg">Current Solutions</h4>
@@ -733,7 +774,7 @@ const Documentation = () => {
               <section id="technical" className="mb-16">
                 <div className="flex items-center mb-6">
                   <FiCpu className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">Technical Architecture</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">4. Technical Architecture</h2>
                 </div>
                 
                 <p className="mb-6 text-lg">
@@ -841,52 +882,11 @@ const Documentation = () => {
                 </section>
               </section>
               
-              {/* Add Problem Statement Section */}
-              <section id="problem" className="mb-16">
-                <div className="flex items-center mb-6">
-                  <FiTarget className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">Problem Statement</h2>
-                </div>
-                
-                <section id="problem-shopper" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.1 Shopper Challenges</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                    <li><strong>Information Overload:</strong> Too many choices lead to decision paralysis.</li>
-                    <li><strong>Lack of Personalization:</strong> Generic recommendations fail to meet individual needs.</li>
-                    <li><strong>Inefficient Discovery:</strong> Traditional search methods are time-consuming and often ineffective.</li>
-                    <li><strong>Abandoned Carts:</strong> Frustration and indecision result in lost sales.</li>
-                  </ul>
-                </section>
-                
-                <section id="problem-retailer" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.2 Retailer Challenges</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                    <li><strong>Low Conversion Rates:</strong> Inability to convert browsers into buyers.</li>
-                    <li><strong>Poor Product Visibility:</strong> Difficulty surfacing relevant products to the right customers.</li>
-                    <li><strong>Limited Customer Insights:</strong> Lack of understanding of shopper behavior and preferences.</li>
-                    <li><strong>High Customer Acquisition Costs:</strong> Inefficient marketing spend due to poor targeting.</li>
-                  </ul>
-                </section>
-                
-                <section id="problem-solution" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.3 The Guidely Solution</h3>
-                  <div className="bg-indigo-50 p-6 rounded-lg">
-                    <p className="mb-3">Guidely addresses these challenges by:</p>
-                    <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                      <li>Reducing information overload through guided discovery.</li>
-                      <li>Delivering hyper-personalized recommendations in real-time.</li>
-                      <li>Creating an engaging, conversational shopping experience.</li>
-                      <li>Providing retailers with actionable insights and seamless integration.</li>
-                    </ul>
-                  </div>
-                </section>
-              </section>
-              
               {/* Add Platform Features Section */}
               <section id="features" className="mb-16">
                 <div className="flex items-center mb-6">
                   <FiCpu className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">Platform Features</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">5. Platform Features</h2>
                 </div>
                 
                 <section id="features-ai" className="mb-10">
@@ -1012,7 +1012,7 @@ const Documentation = () => {
               <section id="token" className="mb-16">
                 <div className="flex items-center mb-6">
                   <FiDollarSign className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">$GLY Token Economy</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">6. $GLY Token Economy</h2>
                 </div>
                 
                 <section id="token-overview" className="mb-10">
@@ -1117,7 +1117,7 @@ const Documentation = () => {
               <section id="business" className="mb-16">
                 <div className="flex items-center mb-6">
                   <FiDollarSign className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">Business Model</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">7. Business Model</h2>
                 </div>
                 
                 <section id="business-revenue" className="mb-10">
@@ -1187,7 +1187,7 @@ const Documentation = () => {
               <section id="implementation" className="mb-16">
                 <div className="flex items-center mb-6">
                   <FiMap className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">Implementation Strategy</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">8. Implementation Strategy</h2>
                 </div>
                 
                 <section id="implementation-roadmap" className="mb-10">
@@ -1252,7 +1252,7 @@ const Documentation = () => {
               <section id="roadmap" className="mb-16">
                 <div className="flex items-center mb-6">
                   <FiMap className="text-primary w-8 h-8 mr-3" />
-                  <h2 className="text-3xl font-bold text-gray-900">Roadmap</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">9. Roadmap</h2>
                 </div>
                 
                 <section id="roadmap-short-term" className="mb-10">

@@ -1,57 +1,58 @@
 import { NextResponse } from 'next/server';
 
-// Hardcoded API key to ensure functionality
-const OPENAI_API_KEY = "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";
+// Hugging Face API key (free tier available)
+// Get your free API key at https://huggingface.co/settings/tokens
+const HUGGINGFACE_API_KEY = "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"; // This is a demo key, get your own at huggingface.co
 
 export async function POST(request: Request) {
   try {
     const { message } = await request.json();
     
-    // Check if we have an OpenAI API key (either from env or hardcoded)
-    const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY || OPENAI_API_KEY;
-    console.log('Using OpenAI API key starting with:', apiKey.substring(0, 10) + '...');
+    // Check if we have a Hugging Face API key
+    const apiKey = process.env.HUGGINGFACE_API_KEY || HUGGINGFACE_API_KEY;
+    console.log('Using Hugging Face API key');
     
     if (apiKey) {
       try {
-        console.log('Sending request to OpenAI API...');
-        // Use the OpenAI API
-        const requestBody = {
-          model: 'gpt-4o-mini', // Using gpt-4o-mini as it's more cost-effective
-          messages: [
-            { 
-              role: 'system', 
-              content: 'You are Guidely, an AI shopping assistant that helps users find products. Keep your responses concise and helpful, focusing on understanding the user\'s shopping needs.'
+        console.log('Sending request to Hugging Face API...');
+        
+        // Use Hugging Face Inference API with a capable model
+        // We'll use microsoft/DialoGPT-large which is good for conversations
+        const response = await fetch(
+          "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill",
+          {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${apiKey}`,
+              "Content-Type": "application/json"
             },
-            { role: 'user', content: message }
-          ],
-          temperature: 0.7,
-          max_tokens: 150 // Keep responses reasonably sized
-        };
+            body: JSON.stringify({
+              inputs: {
+                past_user_inputs: ["Hello, I'm shopping for some products"],
+                generated_responses: ["Hi there! I'm Guidely's shopping assistant. What kind of product are you looking for today?"],
+                text: message
+              }
+            })
+          }
+        );
         
-        console.log('Request payload:', JSON.stringify(requestBody, null, 2));
-        
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-          },
-          body: JSON.stringify(requestBody)
-        });
-        
-        console.log('OpenAI API response status:', response.status);
+        console.log('Hugging Face API response status:', response.status);
         
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          console.error('OpenAI API error details:', errorData);
-          throw new Error(`OpenAI API error: ${response.status} - ${JSON.stringify(errorData)}`);
+          console.error('Hugging Face API error details:', errorData);
+          throw new Error(`Hugging Face API error: ${response.status} - ${JSON.stringify(errorData)}`);
         }
         
         const data = await response.json();
-        console.log('OpenAI API response:', data);
-        return NextResponse.json({ text: data.choices[0].message.content });
+        console.log('Hugging Face API response:', data);
+        
+        // Extract generated text from response
+        const responseText = data.generated_text || "I'm sorry, I couldn't process that. How can I help you find products today?";
+        
+        return NextResponse.json({ text: responseText });
       } catch (apiError) {
-        console.error('OpenAI API error:', apiError);
+        console.error('Hugging Face API error:', apiError);
         // Fall back to simulated responses if the API call fails
         return simulateResponse(message);
       }

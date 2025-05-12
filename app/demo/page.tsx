@@ -27,8 +27,8 @@ type Product = {
 
 // API configuration with hardcoded keys to ensure functionality
 const API_CONFIGS = {
-  // REPLACE THIS WITH YOUR OPENAI API KEY (starts with 'sk-')
-  OPENAI_API_KEY: process.env.NEXT_PUBLIC_OPENAI_API_KEY || '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',
+  // Using Hugging Face instead of OpenAI (free tier available)
+  HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY || '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',
   GOOGLE_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || 'AIzaSyDJ43WSV9J_HsdvkydNxJs_eyN9gHz04-o',
   GOOGLE_CSE_ID: process.env.NEXT_PUBLIC_GOOGLE_CSE_ID || '257bfb8441b924f2f',
   EBAY_API_KEY: process.env.NEXT_PUBLIC_EBAY_API_KEY || '',
@@ -662,10 +662,9 @@ const DemoPage = () => {
               <div className="p-4 bg-white border-t border-gray-200">
                 <div className="flex flex-col md:flex-row gap-4 mb-3">
                   <p className="text-sm text-gray-500">
-                    Powered by AI with real-time product data from 
-                    <span className="font-medium"> Google Shopping</span>, 
-                    <span className="font-medium"> eBay</span>, and 
-                    <span className="font-medium"> Amazon</span>
+                    Powered by AI with 
+                    <span className="font-medium"> Hugging Face</span> for chat and
+                    <span className="font-medium"> Google Search</span> for product data
                   </p>
                   <div className="text-xs text-gray-400 md:ml-auto">Demo Mode</div>
                 </div>
