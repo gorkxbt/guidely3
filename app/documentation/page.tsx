@@ -660,7 +660,7 @@ const Documentation = () => {
                 </div>
                 
                 <section id="market-analysis-target-market" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.1 Target Market</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.1 Target Market</h3>
                   <p className="mb-4">Primary segments:</p>
                   <div className="grid md:grid-cols-2 gap-4 mb-6">
                     <div className="bg-gray-50 p-4 rounded-lg flex items-center">
@@ -683,7 +683,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="market-analysis-market-size" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.2 Market Size</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.2 Market Size</h3>
                   <div className="flex flex-col md:flex-row gap-4 mb-6">
                     <div className="flex-1 bg-gradient-to-r from-indigo-500 to-primary text-white p-6 rounded-lg text-center">
                       <div className="text-3xl font-bold mb-2">$50B</div>
@@ -701,7 +701,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="market-analysis-competitive-landscape" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">2.3 Competitive Landscape</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">3.3 Competitive Landscape</h3>
                   <div className="grid md:grid-cols-2 gap-8 mb-10">
                     <div>
                       <h4 className="font-semibold mb-3 text-lg">Current Solutions</h4>
@@ -850,7 +850,7 @@ const Documentation = () => {
                 </div>
                 
                 <section id="problem-shopper" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.1 Shopper Challenges</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.1 Shopper Challenges</h3>
                   <ul className="list-disc pl-6 space-y-2 text-gray-700">
                     <li><strong>Information Overload:</strong> Too many choices lead to decision paralysis.</li>
                     <li><strong>Lack of Personalization:</strong> Generic recommendations fail to meet individual needs.</li>
@@ -860,7 +860,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="problem-retailer" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.2 Retailer Challenges</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.2 Retailer Challenges</h3>
                   <ul className="list-disc pl-6 space-y-2 text-gray-700">
                     <li><strong>Low Conversion Rates:</strong> Inability to convert browsers into buyers.</li>
                     <li><strong>Poor Product Visibility:</strong> Difficulty surfacing relevant products to the right customers.</li>
@@ -870,7 +870,7 @@ const Documentation = () => {
                 </section>
                 
                 <section id="problem-solution" className="mb-10">
-                  <h3 className="text-2xl font-bold mb-4 text-primary">3.3 The Guidely Solution</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-primary">2.3 The Guidely Solution</h3>
                   <div className="bg-indigo-50 p-6 rounded-lg">
                     <p className="mb-3">Guidely addresses these challenges by:</p>
                     <ul className="list-disc pl-6 space-y-2 text-gray-700">
@@ -1249,7 +1249,100 @@ const Documentation = () => {
                 </section>
               </section>
               
-              {/* Roadmap Section - already exists with correct numbering */}
+              {/* Roadmap Section */}
+              <section id="roadmap" className="mb-16">
+                <div className="flex items-center mb-6">
+                  <FiMap className="text-primary w-8 h-8 mr-3" />
+                  <h2 className="text-3xl font-bold text-gray-900">Roadmap</h2>
+                </div>
+                
+                <section id="roadmap-short-term" className="mb-10">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">9.1 Short-Term Goals</h3>
+                  <div className="bg-white shadow-sm border border-gray-200 rounded-lg mb-6 overflow-hidden">
+                    <div className="p-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-semibold mb-2">MVP Launch</h4>
+                          <p className="text-gray-700">Release core AI shopping assistant functionality.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Early Adopters</h4>
+                          <p className="text-gray-700">Onboard initial set of retailers for beta testing.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">First Token Sale</h4>
+                          <p className="text-gray-700">Initial $GLY token distribution to early supporters.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Basic Analytics</h4>
+                          <p className="text-gray-700">Implement core analytics dashboard.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-5 py-3 text-sm">
+                      <p><strong>Timeline:</strong> Q3-Q4 2023</p>
+                    </div>
+                  </div>
+                </section>
+                
+                <section id="roadmap-mid-term" className="mb-10">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">9.2 Mid-Term Goals</h3>
+                  <div className="bg-white shadow-sm border border-gray-200 rounded-lg mb-6 overflow-hidden">
+                    <div className="p-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-semibold mb-2">Enhanced AI Models</h4>
+                          <p className="text-gray-700">Improve personalization and product understanding.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Mobile SDK</h4>
+                          <p className="text-gray-700">Launch iOS and Android SDK for native app integration.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Partnerships</h4>
+                          <p className="text-gray-700">Establish key integrations with major e-commerce platforms.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Advanced Analytics</h4>
+                          <p className="text-gray-700">Implement predictive analytics and deeper insights.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-5 py-3 text-sm">
+                      <p><strong>Timeline:</strong> Q1-Q4 2024</p>
+                    </div>
+                  </div>
+                </section>
+                
+                <section id="roadmap-long-term" className="mb-10">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">9.3 Long-Term Goals</h3>
+                  <div className="bg-white shadow-sm border border-gray-200 rounded-lg mb-6 overflow-hidden">
+                    <div className="p-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-semibold mb-2">Global Expansion</h4>
+                          <p className="text-gray-700">Scale to international markets and support multiple languages.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Enterprise Solutions</h4>
+                          <p className="text-gray-700">Custom enterprise implementations for major retailers.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Ecosystem Growth</h4>
+                          <p className="text-gray-700">Develop a complete ecosystem around the $GLY token.</p>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">AI Innovations</h4>
+                          <p className="text-gray-700">Pioneer next-generation shopping AI technologies.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-5 py-3 text-sm">
+                      <p><strong>Timeline:</strong> 2025 and beyond</p>
+                    </div>
+                  </div>
+                </section>
+              </section>
               
               {/* Conclusion */}
               <section id="conclusion" className="mb-8">

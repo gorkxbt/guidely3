@@ -325,7 +325,7 @@ const DemoPage = () => {
     
     try {
       // First, try to use our API routes if available
-      let botResponse: Message;
+      let botResponse: Message | undefined;
       let productResults: Product[] = [];
       
       try {
@@ -372,6 +372,14 @@ const DemoPage = () => {
         console.log("API error, using fallback:", apiError);
         // Fallback to simulated response
         botResponse = await simulateBotResponse(input);
+      }
+      
+      // Make sure we have a response
+      if (!botResponse) {
+        botResponse = {
+          text: "I'm sorry, something went wrong. Please try again.",
+          sender: 'bot'
+        };
       }
       
       // Remove loading message and add response
@@ -462,15 +470,19 @@ const DemoPage = () => {
         if (productResponse.ok) {
           const productData = await productResponse.json();
           
-          // Remove loading message and add response with products
-          setMessages(prev => prev.filter(msg => !msg.isLoading).concat({
-            text: `Great choice! I found some excellent ${category} options. Here are my top recommendations:`,
-            sender: 'bot',
-            products: productData.products
-          }));
-        } else {
-          throw new Error('Product API error');
+          if (productData.products && productData.products.length > 0) {
+            // Remove loading message and add response with products
+            setMessages(prev => prev.filter(msg => !msg.isLoading).concat({
+              text: `Great choice! I found some excellent ${category} options. Here are my top recommendations:`,
+              sender: 'bot',
+              products: productData.products
+            }));
+            return; // Early return since we successfully handled the request
+          }
+          // Fall through to fallback if no products returned
         }
+        
+        throw new Error('Product API error or no products returned');
       } catch (apiError) {
         console.log("API error, using fallback:", apiError);
         // Fallback to simulated product response
