@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, KeyboardEvent } from 'react';
 import { FiSend } from 'react-icons/fi';
 
+type Message = {
+  text: string;
+  sender: 'user' | 'bot';
+};
+
 const Demo = () => {
-  const [messages, setMessages] = useState<Array<{text: string, sender: 'user' | 'bot'}>>([
+  const [messages, setMessages] = useState<Message[]>([
     { text: "Hi there! I'm Guidely's shopping assistant. What kind of product are you looking for today?", sender: 'bot' }
   ]);
   const [input, setInput] = useState("");
@@ -20,14 +25,14 @@ const Demo = () => {
     if (!input.trim()) return;
     
     // Add user message
-    const newMessages = [...messages, { text: input, sender: 'user' }];
+    const newMessages: Message[] = [...messages, { text: input, sender: 'user' as const }];
     setMessages(newMessages);
     setInput("");
     
     // Simulate bot response after a short delay
     setTimeout(() => {
       const randomResponse = demoResponses[Math.floor(Math.random() * demoResponses.length)];
-      setMessages(prev => [...prev, { text: randomResponse, sender: 'bot' }]);
+      setMessages(prev => [...prev, { text: randomResponse, sender: 'bot' as const }]);
     }, 1000);
   };
 
@@ -64,7 +69,7 @@ const Demo = () => {
               type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSend()}
               placeholder="Ask about a product..."
               className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
