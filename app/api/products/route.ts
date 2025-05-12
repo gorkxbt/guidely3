@@ -31,9 +31,30 @@ export async function POST(request: Request) {
     const searchTerm = query || category;
     console.log('Using search term:', searchTerm);
     
-    // For reliability, use the simulated product data
-    // This ensures the demo works without API issues
-    console.log('Using simulated product data for reliable demo');
+    // Use either environment variables or hardcoded API keys
+    const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || GOOGLE_API_KEY;
+    const googleCseId = process.env.NEXT_PUBLIC_GOOGLE_CSE_ID || GOOGLE_CSE_ID;
+    
+    // Check if we have Google API credentials
+    if (googleApiKey && googleCseId) {
+      try {
+        console.log('Attempting to use Google Shopping API...');
+        const googleProducts = await fetchFromGoogleShopping(searchTerm, googleApiKey, googleCseId);
+        
+        if (googleProducts.length > 0) {
+          console.log('Successfully fetched Google Shopping products');
+          return NextResponse.json({ products: googleProducts });
+        } else {
+          console.log('No Google Shopping products found, falling back to simulation');
+        }
+      } catch (error) {
+        console.error('Error fetching from Google Shopping:', error);
+        // Continue to fallback
+      }
+    }
+    
+    // Fallback to simulated data if Google API fails
+    console.log('Using simulated product data for fallback');
     
     // Simulate API latency
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -50,6 +71,51 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+}
+
+// Function to fetch from Google Shopping via Custom Search API
+async function fetchFromGoogleShopping(searchTerm: string, apiKey: string, cseId: string): Promise<Product[]> {
+  // Use Google Custom Search API with shopping vertical
+  const url = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cseId}&q=${encodeURIComponent(searchTerm)}&searchType=shopping`;
+  
+  console.log('Fetching from Google Shopping:', url);
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error(`Google API error: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  console.log('Google API response received');
+  
+  if (!data.items || data.items.length === 0) {
+    return [];
+  }
+  
+  return data.items.slice(0, 3).map((item: any) => {
+    // Extract price from snippet if possible
+    const priceMatch = item.snippet?.match(/\$[\d,]+\.?\d*/);
+    const price = priceMatch ? priceMatch[0] : 'Check price';
+    
+    // Get image from pagemap or use fallback
+    let imageUrl = 'https://via.placeholder.com/150';
+    if (item.pagemap?.cse_image?.[0]?.src) {
+      imageUrl = item.pagemap.cse_image[0].src;
+    } else if (item.pagemap?.cse_thumbnail?.[0]?.src) {
+      imageUrl = item.pagemap.cse_thumbnail[0].src;
+    }
+    
+    return {
+      id: item.cacheId || `google-${Math.random().toString(36).substring(2, 9)}`,
+      name: item.title,
+      price: price,
+      image: imageUrl,
+      description: item.snippet || '',
+      rating: 4.5, // Google doesn't usually provide ratings
+      source: 'Google Shopping',
+      url: item.link
+    };
+  });
 }
 
 // Function to generate simulated product results for the demo

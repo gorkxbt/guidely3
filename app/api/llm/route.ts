@@ -9,17 +9,76 @@ export async function POST(request: Request) {
     const { message } = await request.json();
     console.log('Received message:', message);
     
-    try {
-      // For simplicity and reliability, let's use our fallback method
-      // which has predefined responses based on the message content
-      console.log('Using simulated response due to API issues');
+    // Check if we have a Hugging Face API key
+    const apiKey = process.env.HUGGINGFACE_API_KEY || HUGGINGFACE_API_KEY;
+    console.log('Using Hugging Face API key');
+    
+    if (apiKey) {
+      try {
+        console.log('Sending request to Hugging Face API...');
+        
+        // Use a simpler model with text completion for reliability
+        const response = await fetch(
+          "https://api-inference.huggingface.co/models/google/flan-t5-xxl",
+          {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${apiKey}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              inputs: `Answer this user query about shopping in a helpful, concise way: ${message}`,
+              parameters: {
+                max_length: 200,
+                temperature: 0.7
+              }
+            })
+          }
+        );
+        
+        console.log('Hugging Face API response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Hugging Face API error details:', errorData);
+          throw new Error(`Hugging Face API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Hugging Face API response:', data);
+        
+        // Get generated text from response - different models return results in different formats
+        let responseText = "";
+        if (Array.isArray(data) && data.length > 0) {
+          // Some models return an array
+          if (typeof data[0] === 'string') {
+            responseText = data[0];
+          } else if (data[0].generated_text) {
+            responseText = data[0].generated_text;
+          }
+        } else if (data.generated_text) {
+          // Some models return an object with generated_text
+          responseText = data.generated_text;
+        } else if (typeof data === 'string') {
+          // Some models return a string directly
+          responseText = data;
+        }
+        
+        if (!responseText) {
+          console.log('No valid response from Hugging Face, falling back to simulation');
+          return simulateResponse(message);
+        }
+        
+        return NextResponse.json({ text: responseText });
+      } catch (apiError) {
+        console.error('Hugging Face API error:', apiError);
+        // Fall back to simulated responses if the API call fails
+        return simulateResponse(message);
+      }
+    } else {
+      console.log('No API key found, using simulated responses');
+      // No API key, use simulated responses
       return simulateResponse(message);
-    } catch (error) {
-      console.error('Error in fallback response generation:', error);
-      return NextResponse.json(
-        { text: "I'm sorry, I'm having trouble processing your request right now. How can I help you find products today?" },
-        { status: 500 }
-      );
     }
   } catch (error) {
     console.error('Error processing LLM request:', error);
