@@ -25,16 +25,28 @@ export async function POST(request: Request) {
     
     const searchTerm = query || category;
     
-    // In a real implementation, we would make parallel calls to different product APIs
-    // For example:
-    // const [ebayResults, googleResults, amazonResults] = await Promise.all([
-    //   fetchFromEbay(searchTerm),
-    //   fetchFromGoogleShopping(searchTerm),
-    //   fetchFromAmazon(searchTerm)
-    // ]);
+    // Check if we have Google API credentials
+    if (process.env.NEXT_PUBLIC_GOOGLE_API_KEY && process.env.NEXT_PUBLIC_GOOGLE_CSE_ID) {
+      try {
+        console.log('Attempting to use Google Shopping API...');
+        const googleProducts = await fetchFromGoogleShopping(searchTerm);
+        
+        if (googleProducts.length > 0) {
+          console.log('Successfully fetched Google Shopping products');
+          return NextResponse.json({ products: googleProducts });
+        } else {
+          console.log('No Google Shopping products found, falling back to simulation');
+        }
+      } catch (error) {
+        console.error('Error fetching from Google Shopping:', error);
+        // Continue to fallback
+      }
+    }
     
+    // Fallback to simulated data
+    console.log('Using simulated product data');
     // Simulate API latency
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     // For demo purposes, we'll return simulated product data
     const products = simulateProductResults(searchTerm);
@@ -47,6 +59,42 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+}
+
+// Function to fetch from Google Shopping via Custom Search API
+async function fetchFromGoogleShopping(searchTerm: string): Promise<Product[]> {
+  // Use Google Custom Search API with shopping vertical
+  const url = `https://www.googleapis.com/customsearch/v1?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&cx=${process.env.NEXT_PUBLIC_GOOGLE_CSE_ID}&q=${encodeURIComponent(searchTerm)}&searchType=shopping`;
+  
+  console.log('Fetching from Google Shopping:', url);
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error(`Google API error: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  
+  if (!data.items || data.items.length === 0) {
+    return [];
+  }
+  
+  return data.items.slice(0, 3).map((item: any) => {
+    // Extract price from snippet if possible
+    const priceMatch = item.snippet?.match(/\$[\d,]+\.?\d*/);
+    const price = priceMatch ? priceMatch[0] : 'Check price';
+    
+    return {
+      id: item.cacheId || `google-${Math.random().toString(36).substring(2, 9)}`,
+      name: item.title,
+      price: price,
+      image: item.pagemap?.cse_image?.[0]?.src || 'https://via.placeholder.com/150',
+      description: item.snippet || '',
+      rating: 4.5, // Google doesn't usually provide ratings
+      source: 'Google Shopping',
+      url: item.link
+    };
+  });
 }
 
 // Function to simulate fetching from eBay API
@@ -69,28 +117,6 @@ async function fetchFromEbay(searchTerm: string): Promise<Product[]> {
   //   rating: item.sellerRating || 4.5,
   //   source: 'eBay',
   //   url: item.itemWebUrl
-  // }));
-  
-  return [];
-}
-
-// Function to simulate fetching from Google Shopping API
-// In a real implementation, this would use the Google Custom Search API
-async function fetchFromGoogleShopping(searchTerm: string): Promise<Product[]> {
-  // Example of how the real implementation would look:
-  // const response = await fetch(
-  //   `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_API_KEY}&cx=${process.env.GOOGLE_CSE_ID}&q=${encodeURIComponent(searchTerm)}&searchType=shopping`
-  // );
-  // const data = await response.json();
-  // return data.items.map(item => ({
-  //   id: item.cacheId,
-  //   name: item.title,
-  //   price: item.pagemap?.offer?.[0]?.price || '$0.00',
-  //   image: item.pagemap?.cse_image?.[0]?.src || '',
-  //   description: item.snippet || '',
-  //   rating: 4.7,
-  //   source: 'Google Shopping',
-  //   url: item.link
   // }));
   
   return [];
