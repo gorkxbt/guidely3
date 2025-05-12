@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 // Hardcoded API key to ensure functionality
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 
 export async function POST(request: Request) {
   try {
